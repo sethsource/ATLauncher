@@ -35,6 +35,7 @@ import javax.swing.WindowConstants;
 
 import com.atlauncher.App;
 import com.atlauncher.constants.Constants;
+import com.atlauncher.data.InstanceLauncher;
 import com.atlauncher.data.Pack;
 import com.atlauncher.data.PackVersion;
 import com.atlauncher.evnt.listener.RelocalizationListener;
@@ -93,7 +94,11 @@ public final class LauncherFrame extends JFrame implements RelocalizationListene
         }
 
         LogManager.info("Setting up Bottom Bar");
-        LauncherBottomBar bottomBar = new LauncherBottomBar();
+        if (InstanceLauncher.sethEditMode) {
+            LauncherBottomBar bottomBar = new LauncherBottomBar();
+            this.add(bottomBar, BorderLayout.SOUTH);
+
+        }
         LogManager.info("Finished Setting up Bottom Bar");
 
         LogManager.info("Setting up Tabs");
@@ -101,7 +106,6 @@ public final class LauncherFrame extends JFrame implements RelocalizationListene
         LogManager.info("Finished Setting up Tabs");
 
         this.add(tabbedPane, BorderLayout.CENTER);
-        this.add(bottomBar, BorderLayout.SOUTH);
 
         if (show) {
             LogManager.info("Showing Launcher");
@@ -236,6 +240,13 @@ public final class LauncherFrame extends JFrame implements RelocalizationListene
 
         this.tabs = Arrays.asList(new Tab[] { newsTab, vanillaPacksTab, featuredPacksTab, packsBrowserTab, instancesTab,
                 serversTab, accountsTab, toolsTab, settingsTab });
+
+        if(InstanceLauncher.sethEditMode){
+            this.tabs = Arrays.asList(new Tab[] { newsTab, vanillaPacksTab, featuredPacksTab, packsBrowserTab, instancesTab,
+                serversTab, accountsTab, toolsTab, settingsTab });
+        } else {
+            this.tabs = Arrays.asList(new Tab[] {instancesTab});
+        }
 
         tabbedPane.setFont(App.THEME.getTabFont());
         for (Tab tab : this.tabs) {

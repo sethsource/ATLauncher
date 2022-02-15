@@ -45,6 +45,7 @@ import com.atlauncher.constants.Constants;
 import com.atlauncher.data.APIResponse;
 import com.atlauncher.data.BackupMode;
 import com.atlauncher.data.Instance;
+import com.atlauncher.data.InstanceLauncher;
 import com.atlauncher.data.minecraft.loaders.LoaderType;
 import com.atlauncher.evnt.listener.RelocalizationListener;
 import com.atlauncher.evnt.manager.RelocalizationManager;
@@ -165,16 +166,19 @@ public class InstanceCard extends CollapsiblePanel implements RelocalizationList
         as.setTopComponent(top);
         as.setBottomComponent(bottom);
         as.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-
         top.add(this.playButton);
-        top.add(this.updateButton);
-        top.add(this.editInstanceButton);
-        top.add(this.backupButton);
-        top.add(this.settingsButton);
 
-        bottom.add(this.deleteButton);
-        bottom.add(this.exportButton);
-        bottom.add(this.getHelpButton);
+        if(InstanceLauncher.sethEditMode) {
+            top.add(this.updateButton);
+            top.add(this.editInstanceButton);
+            top.add(this.backupButton);
+            top.add(this.settingsButton);
+
+            bottom.add(this.deleteButton);
+            bottom.add(this.exportButton);
+            bottom.add(this.getHelpButton);
+        }
+
 
         setupPlayPopupMenus();
         setupButtonPopupMenus();
@@ -209,16 +213,21 @@ public class InstanceCard extends CollapsiblePanel implements RelocalizationList
                 && (ConfigManager.getConfigItem("platforms.curseforge.modsEnabled", true) == true
                         || (ConfigManager.getConfigItem("platforms.modrinth.modsEnabled", true) == true
                                 && this.instance.launcher.loaderVersion != null))) {
-            bottom.add(this.addButton);
+            if (InstanceLauncher.sethEditMode) {
+                bottom.add(this.addButton);
+            }
         }
 
-        if (instance.launcher.enableEditingMods) {
-            bottom.add(this.editButton);
+
+        if(InstanceLauncher.sethEditMode) {
+            if (instance.launcher.enableEditingMods) {
+                bottom.add(this.editButton);
+            }
+            bottom.add(this.serversButton);
+            bottom.add(this.openWebsite);
+            bottom.add(this.openButton);
         }
 
-        bottom.add(this.serversButton);
-        bottom.add(this.openWebsite);
-        bottom.add(this.openButton);
 
         rightPanel.setLayout(new BorderLayout());
         rightPanel.setPreferredSize(new Dimension(rightPanel.getPreferredSize().width, 155));

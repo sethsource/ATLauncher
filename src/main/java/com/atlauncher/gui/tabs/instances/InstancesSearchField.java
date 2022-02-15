@@ -17,25 +17,34 @@
  */
 package com.atlauncher.gui.tabs.instances;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.regex.Pattern;
 
-import javax.swing.JTextField;
+import javax.swing.*;
 
+import com.atlauncher.App;
+import com.atlauncher.Launcher;
+import com.atlauncher.data.InstanceLauncher;
+import com.atlauncher.gui.LauncherFrame;
 import com.atlauncher.gui.tabs.InstancesTab;
 import com.atlauncher.network.Analytics;
 
-public final class InstancesSearchField extends JTextField implements KeyListener {
+public final class InstancesSearchField extends JPasswordField implements KeyListener {
     private final InstancesTab parent;
 
     public InstancesSearchField(final InstancesTab parent) {
         super(16);
         this.parent = parent;
-
+        if (!InstanceLauncher.sethEditMode) {
+            this.setEchoChar('*');
+        }else {
+            this.setEchoChar((char)0);
+        }
         this.setMaximumSize(new Dimension(190, 23));
         this.addKeyListener(this);
+
     }
 
     public Pattern getSearchPattern() {
@@ -52,6 +61,16 @@ public final class InstancesSearchField extends JTextField implements KeyListene
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+        if (this.getText().equals("password")){
+            this.setText("");
+            InstanceLauncher.sethEditMode=true;
+
+            App.launcher.disableLauncherInstance();
+            final boolean openLauncher = true;
+            SwingUtilities.invokeLater(() -> {
+                new LauncherFrame(openLauncher);
+            });        }
         if (e.getKeyChar() == KeyEvent.VK_ENTER) {
             Analytics.sendEvent(this.getText(), "Search", "Instance");
             this.parent.fireSearchEvent(new InstancesSearchEvent(e.getSource(), this.getSearchPattern()));

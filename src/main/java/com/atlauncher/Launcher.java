@@ -92,6 +92,11 @@ public class Launcher {
     private Process minecraftProcess = null; // The process minecraft is running on
     public boolean minecraftLaunched = false; // If Minecraft has been Launched
 
+    public void disableLauncherInstance() {
+        parent.setVisible(false);
+        parent = null;
+        System.gc();
+    }
     public void loadEverything() {
         PerformanceManager.start();
         if (hasUpdatedFiles()) {

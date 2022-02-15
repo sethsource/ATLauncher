@@ -28,6 +28,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import com.atlauncher.App;
+import com.atlauncher.data.InstanceLauncher;
+import com.atlauncher.data.Pack;
 import com.atlauncher.evnt.listener.RelocalizationListener;
 import com.atlauncher.evnt.manager.RelocalizationManager;
 import com.atlauncher.gui.dialogs.ImportInstanceDialog;
@@ -58,15 +60,17 @@ public final class InstancesNavigationPanel extends JPanel implements Relocaliza
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        this.add(importButton);
-        this.add(Box.createHorizontalGlue());
+        if(InstanceLauncher.sethEditMode) {
+            this.add(importButton);
+            this.add(Box.createHorizontalGlue());
+            this.add(Box.createHorizontalStrut(5));
+            this.add(this.searchButton);
+            this.add(Box.createHorizontalStrut(5));
+            this.add(this.clearButton);
+            this.add(Box.createHorizontalStrut(5));
+            this.add(this.sortingBox);
+        }
         this.add(searchField);
-        this.add(Box.createHorizontalStrut(5));
-        this.add(this.searchButton);
-        this.add(Box.createHorizontalStrut(5));
-        this.add(this.clearButton);
-        this.add(Box.createHorizontalStrut(5));
-        this.add(this.sortingBox);
         this.addListeners();
 
         RelocalizationManager.addListener(this);
